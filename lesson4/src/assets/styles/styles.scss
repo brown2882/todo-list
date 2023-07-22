@@ -1,0 +1,29 @@
+//*{
+//  padding: 0;
+//  margin: 0;
+//  box-sizing: border-box;
+//}
+body{
+  background-color: #3d3a3a;
+}
+.mainDiv{
+  text-align: center;
+  background-color: grey;
+  padding: 10px;
+  width: 500px;
+  margin-left: 30%;
+}
+.array{
+  display:flex;
+  margin:5px;
+}
+.del{
+  color:black;
+  background-color: bisque;
+}
+.btn{
+  background-color: darkred;
+  color:white;
+  margin: 5px;
+  padding: 5px;
+}
