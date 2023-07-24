@@ -34,7 +34,7 @@ export const Todo = ({}) => {
         if(todoArray?.length){
             setLoading(false)
         }
-    }, [todoapp])
+    }, [todoArray])
 
     const handlechange = (e) => {
         setnewvalue(e.target.value);
