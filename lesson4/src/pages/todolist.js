@@ -1,7 +1,10 @@
 import {Btn} from './button'
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import '../assets/styles/styles.scss'
 import {Chekbox} from "../component/chekbox";
+import {useDispatch, useSelector} from "react-redux";
+import {addTodo, getTodo} from "../store/todo/todo.action";
+import axios from "axios";
 // const list = [
 //     {title: 'learn Html', id: 1},
 //     {title: 'learn Css', id: 2},
@@ -12,37 +15,73 @@ import {Chekbox} from "../component/chekbox";
 
 export const Todo = ({}) => {
     const [setvalue,setnewvalue] = useState( '');
-
+    const {list, setList } = useContext()
     const [todoArray, todoapp] = useState([]);
+    const dispatch = useDispatch()
+    const { todo } = useSelector( store => ({
+        todo: store.todoReducer.todo
+    }))
 
 
-    const [loader, setLoading] = useState(true)
+
+
+    const [loader, setLoader] = useState(true)
+
+    // function //
+    // useEffect(() => {
+    //     setTimeout(() => {
+    //         todoapp([
+    //             {title: 'learn Html', id: 1},
+    //             {title: 'learn Css', id: 2},
+    //             {title: 'learn Js', id: 3},
+    //             {title: 'learn React', id: 4},
+    //             {title: 'learn Redus', id: 5},
+    //         ])
+    //     }, 200)
+    //     return () => {}
+    // }, [])
+
+    //redax //
+    // useEffect(() => {
+    //     dispatch(getTodo([
+    //         {title: 'learn Html', id: 1},
+    //         {title: 'learn Css', id: 2},
+    //         {title: 'learn Js', id: 3},
+    //         {title: 'learn React', id: 4},
+    //         {title: 'learn Redus', id: 5},
+    //     ]))
+    // }, [])
+
     useEffect(() => {
-        setTimeout(() => {
-            todoapp([
-                {title: 'learn Html', id: 1},
-                {title: 'learn Css', id: 2},
-                {title: 'learn Js', id: 3},
-                {title: 'learn React', id: 4},
-                {title: 'learn Redus', id: 5},
-            ])
-        }, 200)
-        return () => {}
-    }, [])
-
-    useEffect(() => {
-        if(todoArray?.length){
-            setLoading(false)
+        if(todo?.length){
+            setLoader(false)
         }
-    }, [todoArray])
+    }, [todo])
 
     const handlechange = (e) => {
         setnewvalue(e.target.value);
     }
+
+    // redax example //
+
     const handleCreate = () => {
-        todoapp( [...todoArray, { title: setvalue, id: todoArray?.length +1}])
-        setnewvalue('');
+        setnewvalue('')
+        setList([...todo, {title:setvalue, id: todo?.length + 1}])
+        dispatch(addTodo(([...todo, {title: setvalue, id: todo?.length + 1}])))
     }
+
+    useEffect(() => {
+        axios.get('https://gorest.co.in/public/v2/users').then((res) => {
+            dispatch(getTodo(res.data))
+            setLoader(false)
+        })
+    }, []);
+
+    // function examle //
+    // const handleCreate = () => {
+    //     todoapp( [...todoArray, { title: setvalue, id: todoArray?.length +1}])
+    //     setnewvalue('');
+    // }
     // ------------------delate button
 
     // const [delatetodo, removetodo] = useState(todoArray)
@@ -56,7 +95,7 @@ export const Todo = ({}) => {
     }
     return(
         <div className='mainDiv'>
-            {setLoading ?
+            {loader ?
                 <h1>Loading...</h1>
                 :
                 <div>
@@ -77,7 +116,7 @@ export const Todo = ({}) => {
 
                     <button onClick={handleCreate}>add</button>
                     <div>
-                        {todoArray.map((item) => (
+                        {todo.map((item) => (
                             <div key={item.id} className='array'>
                                 <Chekbox/>
                                 <button className='del' onClick={() =>remove(item.title)}>Delate</button>
